@@ -1,0 +1,2 @@
+We are part of a csharp course , presented by telerik academy 
+we have lecturers and homework after each lection.
