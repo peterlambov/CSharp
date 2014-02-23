@@ -1,0 +1,417 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace BillingSystem
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    
+    public partial class MainWindow : Window
+    {
+        bool createIndexTable = true, createIndexTableGPRS = true, printGPRS = true;
+        const string FilePath = @"..\..\..\";
+        const string FileName = @"CDR.txt";
+        const string defaultTariffPlan = "MyDefaultPlan";
+        DBConnect billingSystemDB = new DBConnect();
+
+        public MainWindow()
+        {
+            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            InitializeComponent();
+            TariffPlan defaultPlan = new TariffPlan(defaultTariffPlan);
+
+            //insert Default Plan in the Database
+            //Tuple<List<TariffPlan.Interval>, List<TariffPlan.Interval>> currentTariffPlan = TariffPlan.FindTariffPlan(defaultTariffPlan);
+            //billingSystemDB.InsertTariffPlan(defaultTariffPlan,currentTariffPlan.Item1,currentTariffPlan.Item2);
+        }
+
+        private void TariffPlanAllTextBoxInit(object sender, EventArgs e)
+        {
+            OnSubscriberTariffPlanLoaded(sender, e);
+            OnTariffPlanNameTextBoxInit(sender, e);
+            OnFirstCallIntervalBlockTextBoxInit(sender, e);
+            OnFirstCallIntervalPriceTextBoxInit(sender, e);
+            OnFirstSMSIntervalBlockTextBoxInit(sender, e);
+            OnFirstSMSIntervalPriceTextBoxInit(sender, e);
+            OnFirstGPRSIntervalBlockTextBoxInit(sender, e);
+            OnFirstGPRSIntervalPriceTextBoxInit(sender, e);
+            OnSubseqCallIntervalBlockTextBoxInit(sender, e);
+            OnSubseqCallIntervalPriceTextBoxInit(sender, e);
+            OnSubseqSMSIntervalBlockTextBoxInit(sender, e);
+            OnSubseqSMSIntervalPriceTextBoxInit(sender, e);
+            OnSubseqGPRSIntervalBlockTextBoxInit(sender, e);
+            OnSubseqGPRSIntervalPriceTextBoxInit(sender, e);
+        }
+
+        private void SubscriberAllTextBoxInit(object sender, EventArgs e)
+        {
+            OnSubscriberMSISDNTextBoxInit(sender, e);
+            OnSubscriberNameTextBoxInit(sender, e);
+            OnSubscriberEGNTextBoxInit(sender, e);
+            OnSubscriberAccountTextBoxInit(sender, e);
+            OnSubscriberTariffPlanLoaded(sender, e);
+        }
+
+        private void OnSubscriberMSISDNTextBoxInit(object sender, EventArgs e)
+        {
+            this.SubscriberMSISDN.Text = string.Empty;
+        }
+
+        private void OnSubscriberNameTextBoxInit(object sender, EventArgs e)
+        {
+            this.SubscriberName.Text = string.Empty;
+        }
+
+        private void OnSubscriberEGNTextBoxInit(object sender, EventArgs e)
+        {
+            this.SubscriberEGN.Text = string.Empty;
+        }    
+
+        private void OnSubscriberAccountTextBoxInit(object sender, EventArgs e)
+        {
+            this.SubscriberAccount.Text = string.Empty;
+        }
+
+        private void OnSubscriberTariffPlanLoaded(object sender, EventArgs e)
+        {
+            this.SubscriberTariffPlan.Items.Clear();
+            this.SubscriberTariffPlan.IsEditable = true; //must be true to display .Text
+            this.SubscriberTariffPlan.Text = "Please choose:";
+
+            //List<string> allTariffPlanNames = TariffPlan.GetTariffPlanNames();
+            List<string> allTariffPlanNames = billingSystemDB.SelectTariffPlanNames();
+            foreach (var tariffPlan in allTariffPlanNames)
+            {
+                this.SubscriberTariffPlan.Items.Add(tariffPlan);
+            }
+            
+        }
+        
+        private void OnAddSubcriber_Click(object sender, RoutedEventArgs e)
+        {
+            string currentMSISDN = this.SubscriberMSISDN.Text;
+            string currentName = this.SubscriberName.Text;
+            string currentEGN = this.SubscriberEGN.Text;
+            string currentTariffPlan = defaultTariffPlan;
+            Subscriber currentSubscriber = new Subscriber(currentMSISDN, currentName, currentEGN);
+
+            if (this.SubscriberTariffPlan.SelectedItem != null)
+            {
+                currentTariffPlan = this.SubscriberTariffPlan.SelectedItem.ToString();
+                currentSubscriber.ChangeTariffPlan(currentTariffPlan);
+            }
+
+            billingSystemDB.InsertSubscriber(currentMSISDN, currentName, currentEGN, currentTariffPlan, 0);
+
+            SubscriberAllTextBoxInit(sender, e);
+        }
+
+        private void OnChangeSubcriber_Click(object sender, RoutedEventArgs e)
+        {
+            string currentMSISDN = this.SubscriberMSISDN.Text;
+            string currentName = this.SubscriberName.Text;
+            string currentEGN = this.SubscriberEGN.Text;
+            string currentTariffPlan = this.SubscriberTariffPlan.SelectedItem.ToString();
+            double currentAccount = double.Parse(this.SubscriberAccount.Text);
+
+            Subscriber.ChangeSubscriber(currentMSISDN, new Tuple<string, string, string, double>(currentName, currentEGN, currentTariffPlan, currentAccount));
+            billingSystemDB.UpdateSubscriber(currentMSISDN, currentName, currentEGN, currentTariffPlan, currentAccount);
+
+            SubscriberAllTextBoxInit(sender, e);
+        }
+
+        private void OnDeleteSubcriber_Click(object sender, RoutedEventArgs e)
+        {
+            Subscriber.DeleteSubscriber(this.SubscriberMSISDN.Text);
+            billingSystemDB.DeleteSubscriber(this.SubscriberMSISDN.Text);
+            SubscriberAllTextBoxInit(sender, e);
+        }
+
+        private void OnFindSubcriber_Click(object sender, RoutedEventArgs e)
+        {
+            Tuple<string, string, string, double> currentSubscriber;
+
+            //currentSubscriber = Subscriber.FindSubscriber(this.SubscriberMSISDN.Text);
+            currentSubscriber = billingSystemDB.SelectSubscriber(this.SubscriberMSISDN.Text);
+            this.SubscriberName.Text = currentSubscriber.Item1.ToString();
+            this.SubscriberEGN.Text = currentSubscriber.Item2.ToString();
+            this.SubscriberTariffPlan.Text = currentSubscriber.Item3.ToString();
+            this.SubscriberAccount.Text = currentSubscriber.Item4.ToString();
+        }
+
+        private void OnTariffPlanNameTextBoxInit(object sender, EventArgs e)
+        {
+            this.TariffPlanName.Text = string.Empty;
+        }
+
+        private void OnFirstCallIntervalBlockTextBoxInit(object sender, EventArgs e)
+        {
+            this.firstCallIntervalBlock.Text = string.Empty;
+        }
+
+        private void OnFirstCallIntervalPriceTextBoxInit(object sender, EventArgs e)
+        {
+            this.firstCallIntervalPrice.Text = string.Empty;
+        }
+
+        private void OnSubseqCallIntervalBlockTextBoxInit(object sender, EventArgs e)
+        {
+            this.subseqCallIntervalBlock.Text = string.Empty;
+        }
+
+        private void OnSubseqCallIntervalPriceTextBoxInit(object sender, EventArgs e)
+        {
+            this.subseqCallIntervalPrice.Text = string.Empty;
+        }
+
+        private void OnFirstSMSIntervalBlockTextBoxInit(object sender, EventArgs e)
+        {
+            this.firstSMSIntervalBlock.Text = string.Empty;
+        }
+
+        private void OnFirstSMSIntervalPriceTextBoxInit(object sender, EventArgs e)
+        {
+            this.firstSMSIntervalPrice.Text = string.Empty;
+        }
+
+        private void OnSubseqSMSIntervalBlockTextBoxInit(object sender, EventArgs e)
+        {
+            this.subseqSMSIntervalBlock.Text = string.Empty;
+        }
+
+        private void OnSubseqSMSIntervalPriceTextBoxInit(object sender, EventArgs e)
+        {
+            this.subseqSMSIntervalPrice.Text = string.Empty;
+        }
+
+        private void OnFirstGPRSIntervalBlockTextBoxInit(object sender, EventArgs e)
+        {
+            this.firstGPRSIntervalBlock.Text = string.Empty;
+        }
+
+        private void OnFirstGPRSIntervalPriceTextBoxInit(object sender, EventArgs e)
+        {
+            this.firstGPRSIntervalPrice.Text = string.Empty;
+        }
+
+        private void OnSubseqGPRSIntervalBlockTextBoxInit(object sender, EventArgs e)
+        {
+            this.subseqGPRSIntervalBlock.Text = string.Empty;
+        }
+
+        private void OnSubseqGPRSIntervalPriceTextBoxInit(object sender, EventArgs e)
+        {
+            this.subseqGPRSIntervalPrice.Text = string.Empty;
+        }
+
+        private void OnAddTariffPlan_Click(object sender, RoutedEventArgs e)
+        {
+            List<TariffPlan.Interval> firstList = new List<TariffPlan.Interval>();
+            List<TariffPlan.Interval> subseqList = new List<TariffPlan.Interval>();
+
+            TariffPlan.Interval firstCall = new TariffPlan.Interval();
+            TariffPlan.Interval subseqCall = new TariffPlan.Interval();
+            firstCall.chargeableBlock = long.Parse(this.firstCallIntervalBlock.Text);
+            firstCall.Price = double.Parse(this.firstCallIntervalPrice.Text);
+            subseqCall.chargeableBlock = long.Parse(this.subseqCallIntervalBlock.Text);
+            subseqCall.Price = double.Parse(this.subseqCallIntervalPrice.Text);
+
+            TariffPlan.Interval firstSMS = new TariffPlan.Interval();
+            TariffPlan.Interval subseqSMS = new TariffPlan.Interval();
+            firstSMS.chargeableBlock = long.Parse(this.firstSMSIntervalBlock.Text);
+            firstSMS.Price = double.Parse(this.firstSMSIntervalPrice.Text);
+            subseqSMS.chargeableBlock = long.Parse(this.subseqSMSIntervalBlock.Text);
+            subseqSMS.Price = double.Parse(this.subseqSMSIntervalPrice.Text);
+
+            TariffPlan.Interval firstGPRS = new TariffPlan.Interval();
+            TariffPlan.Interval subseqGPRS = new TariffPlan.Interval();
+            firstGPRS.chargeableBlock = long.Parse(this.firstGPRSIntervalBlock.Text);
+            firstGPRS.Price = double.Parse(this.firstGPRSIntervalPrice.Text);
+            subseqGPRS.chargeableBlock = long.Parse(this.subseqGPRSIntervalBlock.Text);
+            subseqGPRS.Price = double.Parse(this.subseqGPRSIntervalPrice.Text);
+
+            firstList.Add(firstCall);
+            firstList.Add(firstSMS);
+            firstList.Add(firstGPRS);
+
+            subseqList.Add(subseqCall);
+            subseqList.Add(subseqSMS);
+            subseqList.Add(subseqGPRS);
+
+            TariffPlan currentPlan = new TariffPlan(this.TariffPlanName.Text, firstList, subseqList);
+            billingSystemDB.InsertTariffPlan(this.TariffPlanName.Text, firstList, subseqList);
+
+            TariffPlanAllTextBoxInit(sender, e);
+        }
+
+        private void OnChangeTariffPlan_Click(object sender, RoutedEventArgs e)
+        {
+            List<TariffPlan.Interval> firstList = new List<TariffPlan.Interval>();
+            List<TariffPlan.Interval> subseqList = new List<TariffPlan.Interval>();
+
+            TariffPlan.Interval firstCall = new TariffPlan.Interval();
+            TariffPlan.Interval subseqCall = new TariffPlan.Interval();
+            firstCall.chargeableBlock = long.Parse(this.firstCallIntervalBlock.Text);
+            firstCall.Price = double.Parse(this.firstCallIntervalPrice.Text);
+            subseqCall.chargeableBlock = long.Parse(this.subseqCallIntervalBlock.Text);
+            subseqCall.Price = double.Parse(this.subseqCallIntervalPrice.Text);
+
+            TariffPlan.Interval firstSMS = new TariffPlan.Interval();
+            TariffPlan.Interval subseqSMS = new TariffPlan.Interval();
+            firstSMS.chargeableBlock = long.Parse(this.firstSMSIntervalBlock.Text);
+            firstSMS.Price = double.Parse(this.firstSMSIntervalPrice.Text);
+            subseqSMS.chargeableBlock = long.Parse(this.subseqSMSIntervalBlock.Text);
+            subseqSMS.Price = double.Parse(this.subseqSMSIntervalPrice.Text);
+
+            TariffPlan.Interval firstGPRS = new TariffPlan.Interval();
+            TariffPlan.Interval subseqGPRS = new TariffPlan.Interval();
+            firstGPRS.chargeableBlock = long.Parse(this.firstGPRSIntervalBlock.Text);
+            firstGPRS.Price = double.Parse(this.firstGPRSIntervalPrice.Text);
+            subseqGPRS.chargeableBlock = long.Parse(this.subseqGPRSIntervalBlock.Text);
+            subseqGPRS.Price = double.Parse(this.subseqGPRSIntervalPrice.Text);
+
+            firstList.Add(firstCall);
+            firstList.Add(firstSMS);
+            firstList.Add(firstGPRS);
+
+            subseqList.Add(subseqCall);
+            subseqList.Add(subseqSMS);
+            subseqList.Add(subseqGPRS);
+
+            TariffPlan.ChangeTariffPlan(this.TariffPlanName.Text, new Tuple<List<TariffPlan.Interval>, List<TariffPlan.Interval>>(firstList, subseqList));
+            billingSystemDB.UpdateTariffPlan(this.TariffPlanName.Text, new Tuple<List<TariffPlan.Interval>, List<TariffPlan.Interval>>(firstList, subseqList));
+            TariffPlanAllTextBoxInit(sender, e);
+        }
+
+        private void OnDeleteTariffPlan_Click(object sender, RoutedEventArgs e)
+        {
+            TariffPlan.DeleteTariffPlan(this.TariffPlanName.Text);
+            billingSystemDB.DeleteTariffPlan(this.TariffPlanName.Text);
+            TariffPlanAllTextBoxInit(sender, e);
+        }
+
+        private void OnFindTariffPlan_Click(object sender, RoutedEventArgs e)
+        {
+            Tuple<List<TariffPlan.Interval>, List<TariffPlan.Interval>> currentTariffPlan;
+            
+            //currentTariffPlan = TariffPlan.FindTariffPlan(this.TariffPlanName.Text);
+            currentTariffPlan = billingSystemDB.SelectTariffPlan(this.TariffPlanName.Text);
+            List<TariffPlan.Interval> firstList = currentTariffPlan.Item1;
+            List<TariffPlan.Interval> subseqList = currentTariffPlan.Item2;
+            
+            TariffPlan.Interval firstCall = firstList[0];
+            TariffPlan.Interval subseqCall = subseqList[0];
+
+            this.firstCallIntervalBlock.Text = firstCall.chargeableBlock.ToString();
+
+            this.firstCallIntervalPrice.Text = (firstCall.Price.ToString().Length < 4) ? firstCall.Price.ToString() + '0' : firstCall.Price.ToString();
+            this.subseqCallIntervalBlock.Text = subseqCall.chargeableBlock.ToString();
+            this.subseqCallIntervalPrice.Text = (subseqCall.Price.ToString().Length < 4) ? subseqCall.Price.ToString() + '0' : subseqCall.Price.ToString();
+
+            TariffPlan.Interval firstSMS = firstList[1];
+            TariffPlan.Interval subseqSMS = subseqList[1];
+            this.firstSMSIntervalBlock.Text = firstSMS.chargeableBlock.ToString();
+            this.firstSMSIntervalPrice.Text = (firstSMS.Price.ToString().Length < 4) ? firstSMS.Price.ToString() + '0' : firstSMS.Price.ToString();
+            this.subseqSMSIntervalBlock.Text = subseqSMS.chargeableBlock.ToString();
+            this.subseqSMSIntervalPrice.Text = (subseqSMS.Price.ToString().Length < 4) ? subseqSMS.Price.ToString() + '0' : subseqSMS.Price.ToString();
+
+            TariffPlan.Interval firstGPRS = firstList[2];
+            TariffPlan.Interval subseqGPRS = subseqList[2];
+            this.firstGPRSIntervalBlock.Text = firstGPRS.chargeableBlock.ToString();
+            this.firstGPRSIntervalPrice.Text = (firstGPRS.Price.ToString().Length < 4) ? firstGPRS.Price.ToString() + '0' : firstGPRS.Price.ToString();
+            this.subseqGPRSIntervalBlock.Text = subseqGPRS.chargeableBlock.ToString();
+            this.subseqGPRSIntervalPrice.Text = (subseqGPRS.Price.ToString().Length < 4) ? subseqGPRS.Price.ToString() + '0' : subseqGPRS.Price.ToString();
+        }
+
+        private void OnShowHistoryTextBoxInit(object sender, EventArgs e)
+        {
+            this.ShowHistoryTextBox.Text = string.Empty;
+        }
+
+        private void OnShowHistory_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            //this.ShowHistoryTextBox.Text = Subscriber.PrintClientsTable();
+            string resultRW = RWFiles.ReadFile(FilePath + FileName);
+
+            string[] resultByLine = resultRW.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            Array.Sort(resultByLine);
+            
+            StringBuilder sbMOC = new StringBuilder();
+            StringBuilder sbSMS = new StringBuilder();
+            StringBuilder sbGPRS = new StringBuilder();
+
+            for (int i = 0; i < resultByLine.Count(); i++)
+            {
+                switch (resultByLine[i][0])
+                {
+                    case 'M': sbMOC.AppendLine(resultByLine[i]);
+                        break;
+                    case 'S': sbSMS.AppendLine(resultByLine[i]);
+                        break;
+                    case 'G': sbGPRS.AppendLine(resultByLine[i]);
+                        break;
+                    default: break;
+                }
+            }
+
+            string[] allMOCs = sbMOC.ToString().Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] allSMSs = sbSMS.ToString().Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] allGPRSs = sbGPRS.ToString().Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            
+            List<MOC> moc = new List<MOC>();
+            List<SMS> sms = new List<SMS>();
+            List<GPRS> gprs = new List<GPRS>();
+
+            foreach (var singleRecord in allMOCs)
+            {
+                string[] singleMOC = singleRecord.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (this.SubscriberMSISDN.Text == singleMOC[1]) moc.Add(new MOC(singleMOC[1], singleMOC[2], singleMOC[3], singleMOC[4], singleMOC[5]));
+            }
+            foreach (var singleRecord in allSMSs)
+            {
+                string[] singleSMS = singleRecord.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (this.SubscriberMSISDN.Text == singleSMS[1]) sms.Add(new SMS(singleSMS[1], singleSMS[2], singleSMS[4], singleSMS[5], singleSMS[6], singleSMS[8]));
+            }
+            foreach (var singleRecord in allGPRSs)
+            {
+                string[] singleGPRS = singleRecord.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (this.SubscriberMSISDN.Text == singleGPRS[1]) gprs.Add(new GPRS(singleGPRS[1], singleGPRS[2], singleGPRS[4], singleGPRS[6], singleGPRS[7]));
+            }
+
+            foreach (var item in moc)
+                sb.AppendLine(string.Format("Call Start time: {0} Call Duration: {1} s Location network: {2} BParty: {3} Price: {4}", item.CallStartTime, item.CallDuration, item.CurrentLocation,item.BParty, "Price"));
+            foreach (var item in sms)
+                sb.AppendLine(string.Format("SMS Send time: {0} Location network: {1} BParty: {2} Carrier: {3} Chars: {4} Price: {5}", item.SmsSendTime, item.CurrentLocation, item.BParty, item.Carrier, item.NumberOfSymbols, "Price"));
+            foreach (var item in gprs)
+                sb.AppendLine(string.Format("Session Start time: {0} Location network: {1} Carrier: {2} Bytes: {3} B Price: {4}", item.GPRSStartTime, item.CurrentLocation, item.Carrier, item.NumberOfBytes, "Price"));
+
+            this.ShowHistoryTextBox.Text = sb.ToString();
+        }       
+
+        private void OnExit_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Do you really want to Exit now ?", "Thank you for using our Service", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes) Environment.Exit(0);
+            else return;
+        }
+    }
+}

@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TeamWork
+{
+    public abstract class Services
+    {
+        private DestinationZone destinationZone;
+        private Location location;
+        private DateTime startTime;
+    }
+}

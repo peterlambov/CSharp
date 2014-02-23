@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TeamWork
+{
+    //Methods for reading/writting and parsing CSV files. Mainly for the purpose of rating data.
+    //http://www.dotnetperls.com/textfieldparser
+
+    public static class RWFiles
+    {
+
+        public static StringBuilder ReadFile(string fileName)
+        {
+            StringBuilder sb = new StringBuilder();
+            //TODO:
+            //Reads the CSV file ansd passes the content to StringBuilder
+
+            return sb;
+        }
+
+        public static void WriteFile(string fileName, StringBuilder data)
+        {
+            //TODO:
+            //Write new or overwrites existing file with data
+        }
+
+        public static string[] ParseLine(string csvLine)
+        {
+            string[] result = new string[1];
+            //TODO: Implementation
+            //The method returns array of strings parsed out of CSV line.
+            //The output needs to be assigned to the specific structure, e.g MOCTariffIndexTable.
+            //This could be done with iterations, since both implement IEnumerable
+
+            return result;
+        }
+
+        public static string WriteLine(IEnumerable plainData)
+        {
+            string result = string.Empty;
+            //TODO: Implementation
+            //The method return CSV string.
+            //The string needs to be appended to StreamBuiled and written in filter
+
+            return result;
+        }
+    }
+}

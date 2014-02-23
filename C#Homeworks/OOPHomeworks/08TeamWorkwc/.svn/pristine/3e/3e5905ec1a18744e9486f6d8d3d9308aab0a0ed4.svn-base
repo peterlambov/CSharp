@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TeamWork
+{
+    public abstract class RatingItems : IRateable
+    {
+        //public DestinationZone destinationZone;
+        //public Location location;
+        //public DateTime startTime;
+
+        public List<RatingData> ratingTable = new List<RatingData>();
+
+        public struct RatingData
+        {
+            //The Rating Data is 2 dimensional table, consisted of 2 columns:
+            //SearchKey | index
+            //with the Index method we 
+            // A) pass the input SearchKey from the CDR, 
+            // B) evaluate the best match in th table
+            // C) Retrieve the Index form the match row.
+            //SearchKey must by column with unique values.
+
+            public string[] searchKey { get; set; }
+            public int index { get; set; }
+
+            //Constructor
+            public RatingData(string ratingData)
+                : this()
+            {
+                //TODO: Comma separated data loaded from file
+                //
+                //Line format: ->SearchKey;Index;
+                //Parse the data in the structure fields
+            }
+        }
+
+        public abstract T Index<T>(params object[] searchKey);
+        //Search through the Rating Data structure
+
+        //Constructor
+        protected RatingItems()
+        {
+            //TODO:
+        }
+
+    }
+
+
+
+}

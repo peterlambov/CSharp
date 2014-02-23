@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TeamWork
+{
+    public enum DestinationZone
+    {
+        Vivacom = 1,
+        Globul = 2,
+        Mtel = 3,
+        EU = 4,
+        World = 5
+    }
+}

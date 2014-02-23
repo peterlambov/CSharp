@@ -1,0 +1,149 @@
+﻿<Window x:Class="BillingSystem.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Billing System" Height="550" Width="825">
+    <Grid>
+        <Label Content="Subscribers" 
+               Height="25" Width="75"
+               Margin="10,10,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="Name" 
+               Height="25" Width="50"
+               Margin="10,49,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Name="SubscriberName" 
+                 Height="25" Width="94"
+                 Margin="71,49,0,0" 
+                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                 TextWrapping="Wrap" 
+                 Initialized="OnSubscriberNameTextBoxInit"/>
+        <Label Content="EGN" 
+               Height="25" Width="50"
+               Margin="10,78,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Name="SubscriberEGN"
+                 Height="25" Width="75"
+                 Margin="71,78,0,0" 
+                 HorizontalAlignment="Left" VerticalAlignment="Top" 
+                 TextWrapping="Wrap"
+                 Initialized="OnSubscriberEGNTextBoxInit"/>
+        <Button Name="AddSubcriber"
+                Content="Add New" 
+                Height="25" Width="75"
+                Margin="90,10,0,0" 
+                HorizontalAlignment="Left" VerticalAlignment="Top" 
+                Click="OnAddSubcriber_Click"/>
+        <Button Name="FindSubcriber"
+        	    Content="Find" 
+        	    Height="25" Width="75"
+        	    Margin="170,11,0,0" 
+        	    HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	    Click="OnFindSubcriber_Click"/>
+        <Label Content="Tariff Plan" 
+               Height="25" Width="75"
+               Margin="300,10,0,0" 
+               HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Label Content="Name" 
+        	   Height="25" Width="50"
+        	   Margin="300,49,0,0" 
+        	   HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Name="TariffPlanName" 
+        	     Height="25" Width="94"
+        	     Margin="355,49,0,0" 
+        	     HorizontalAlignment="Left" VerticalAlignment="Top"
+        	     TextWrapping="Wrap" 
+        	     Initialized="OnTariffPlanNameTextBoxInit"/>
+        <Label Content="MOC" 
+        	   Height="25" Width="50"
+        	   Margin="300,78,0,0" 
+        	   HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="5.63,0.661"/>
+        <Label Content="SMS" 
+        	   Height="25" Width="50"
+        	   Margin="300,108,0,0" 
+        	   HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="5.63,0.661"/>
+        <Label Content="GPRS" 
+        	   Height="25" Width="50"
+        	   Margin="300,138,0,0" 
+        	   HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="5.63,0.661"/>
+        <Button Name="AddTariffPlan"
+        	    Content="Add New" 
+        	    Height="25" Width="75"
+        	    Margin="380,11,0,0" 
+        	    HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	    Click="OnAddTariffPlan_Click"/>
+        <Button Name="FindTariffPlan"
+        	    Content="Find" 
+        	    Height="25" Width="75"
+        	    Margin="460,11,0,0" 
+        	    HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	    Click="OnFindTariffPlan_Click"/>
+        <ComboBox Name="MOCComboBox"
+                 Height="25" Width="100"
+                 Margin="355,78,0,0" 
+                 HorizontalAlignment="Left" VerticalAlignment="Top" 
+                 Loaded="OnMOCComboBoxLoaded" />
+        <ComboBox Name="SMSComboBox"
+        	      Height="25" Width="100"
+        	      Margin="355,107,0,0" 
+        	      HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	      Loaded="OnSMSComboBoxLoaded" />
+        <ComboBox Name="GPRSComboBox"
+        	      Height="25" Width="100"
+        	      Margin="355,137,0,0" 
+        	      HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	      Loaded="OnGPRSComboBoxLoaded" />
+        <Label Content="Used Services" 
+        	   Height="25" Width="90"
+               Margin="10,200,0,0"
+        	   HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="MOC Duration" 
+        	   Height="25" Width="90"
+        	   Margin="10,240,0,0"
+        	   HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Name="MOCDuration"
+        	     Height="25" Width="75"
+        	     Margin="115,240,0,0" 
+        	     HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	     TextWrapping="Wrap"
+        	     Initialized="OnMOCDurationTextBoxInit"/>
+        <Label Content="Number of SMS" 
+        	   Height="25" Width="100"
+        	   Margin="10,270,0,0"
+        	   HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Name="NumberOfSMS"
+        	     Height="25" Width="75"
+        	     Margin="115,270,0,0" 
+        	     HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	     TextWrapping="Wrap"
+        	     Initialized="OnNumberOfSMSTextBoxInit"/>
+        <Label Content="GPRS Data in KB" 
+        	   Height="25" Width="100"
+        	   Margin="10,300,0,0"
+        	   HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox Name="GPRSData"
+        	     Height="25" Width="75"
+        	     Margin="115,300,0,0" 
+        	     HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	     TextWrapping="Wrap"
+        	     Initialized="OnGPRSDataTextBoxInit"/>
+        <Button Name="CalculateAmount"
+        	    Content="Calculate Amount" 
+        	    Height="25" Width="100"
+        	    Margin="10,339,0,0" 
+        	    HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	    Click="OnCalculateAmount_Click"/>
+        <TextBox Name="Amount"
+        	     Height="25" Width="75"
+        	     Margin="115,339,0,0" 
+        	     HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	     TextWrapping="Wrap"
+        	     Initialized="OnAmountTextBoxInit"/>
+        <Button Name="ExitButton"
+        	    Content="Exit" 
+        	    Height="25" Width="75"
+        	    Margin="732,11,0,0" 
+        	    HorizontalAlignment="Left" VerticalAlignment="Top" 
+        	    Click="OnExit_Click"/>
+
+    </Grid>
+</Window>

@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TeamWork.Billing" Collapsed="true">
+    <Position X="10.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAgAIAAAAAAAAAAAAAMAAAAAAAAAAAEIAAA=</HashCode>
+      <FileName>Billing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamWork.DBConnect" Collapsed="true">
+    <Position X="12.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQAAEAEAAAAEQBAAAADABQAAQEAAAAAAAAAQgAAAAI=</HashCode>
+      <FileName>DBConnect.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamWork.GPRS" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GPRS.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TeamWork.IOException" Collapsed="true">
+    <Position X="14.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IOException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamWork.Location" Collapsed="true">
+    <Position X="9" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Location.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamWork.MOC" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MOC.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TeamWork.RatingItems" Collapsed="true">
+    <Position X="6.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAQAAA=</HashCode>
+      <FileName>RatingItems.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TeamWork.SMS" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SMS.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TeamWork.Subscriber" Collapsed="true">
+    <Position X="10.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAABAEAAAAAQAIAAAMEAAABAAAAQAAAAAA=</HashCode>
+      <FileName>Subscriber.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamWork.TariffPlan" Collapsed="true">
+    <Position X="12.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAEAAAAAAAAAAEAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>TariffPlan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamWork.TimeInterval" Collapsed="true">
+    <Position X="3.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>TimeInterval.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamWork.TrafficVolume" Collapsed="true">
+    <Position X="5.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>TrafficVolume.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TeamWork.Destination" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Destination.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="TeamWork.CDR" Collapsed="true">
+    <Position X="10.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CDR.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="TeamWork.IChargeable" Collapsed="true">
+    <Position X="10.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IChargeable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TeamWork.IRateable" Collapsed="true">
+    <Position X="12.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>IRateable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
